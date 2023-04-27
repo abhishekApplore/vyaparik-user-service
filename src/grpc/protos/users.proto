@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+service UserService {
+    rpc getUserDetailsById (UserId) returns (UserDetails) {}
+    rpc getStoreDetailsViaUserID (UserId) returns (StoreDetails) {}
+    rpc getUserFCMTOKEN (UserId) returns (FCMToken) {}
+}
+
+message Empty {}
+
+
+message UserDetails {
+    string _id = 1;
+    string fullname = 2;
+    string picture = 3;
+    string bio = 4;
+}
+message StoreDetails {
+    string _id = 1;
+    string name = 2;
+    string type = 3;
+    string picture = 4;
+    string bio = 5;
+}
+
+message UserId {
+    string _id = 1;
+}
+
+message FCMToken {
+    string token = 1;
+}

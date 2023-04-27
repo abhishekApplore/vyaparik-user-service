@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Basic User",
+    "permissions": ["63216d476ee91d969f274799"],
+    "status": "Active",
+    "points": 0
+  },
+  {
+    "name": "Intemediate User",
+    "permissions": ["63216d4e55b5ac965beb0f52"],
+    "status": "Active",
+    "points": 500
+  },
+  {
+    "name": "Advance User",
+    "permissions": ["63216d53081960b6959ac3a0"],
+    "status": "Active",
+    "points": 1000
+  }
+]

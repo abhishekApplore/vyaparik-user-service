@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+service ProductService {
+    rpc GetAllProducts (UserId) returns (ProductList) {}
+    rpc GetNumberOfSoldProductsByUser (UserId) returns (ProductCount) {}
+}
+
+message Empty {}
+
+message Product {
+    string _id = 1;
+}
+
+message ProductList {
+    repeated Product product = 1;
+}
+
+message ProductId {
+    string _id = 1;
+}
+message UserId {
+    string _id = 1;
+}
+message ProductCount {
+    int32 sold = 1;
+}

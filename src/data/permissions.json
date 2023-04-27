@@ -1,0 +1,23 @@
+[
+  {
+    "_id": "63216d476ee91d969f274799",
+    "name": "Basic User Permission",
+    "status": "Active",
+    "moduleRights": ["POLYGON_SUBMIT", "CATEGORY_VIEW"]
+  },
+  {
+    "_id": "63216d4e55b5ac965beb0f52",
+    "name": "Intermediate User Permission",
+    "status": "Active",
+    "moduleRights": ["CATEGORY_AHP_COMPARISON"]
+  },
+  {
+    "_id": "63216d53081960b6959ac3a0",
+    "name": "Advance User Permission",
+    "status": "Active",
+    "moduleRights": [
+      "CATEGORY_RATIO_VIEW_EDIT",
+      "CATEGORY_QUALITATIVE_DATA_VIEW_EDIT"
+    ]
+  }
+]
