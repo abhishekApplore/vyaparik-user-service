@@ -95,6 +95,10 @@ const Schema = mongoose.Schema(
       type: String,
       default: null,
     },
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

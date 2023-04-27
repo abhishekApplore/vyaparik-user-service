@@ -5,9 +5,11 @@ Uses Firebase-admin api to verify.
 
 */
 
+const mongoose = require("mongoose");
 const ErrorMessage = require("../constants/ErrorMessage");
 const HttpError = require("../helpers/HttpError");
 const TokenHelper = require("../helpers/Token.helper");
+const userModel = require("../models/user.model");
 
 const AuthMiddleware = async (req, res, next) => {
   const headerToken = req.headers.authorization;
@@ -26,9 +28,17 @@ const AuthMiddleware = async (req, res, next) => {
     const decodedValue = TokenHelper.verifyAccessToken(token);
 
     if (decodedValue) {
-      req.user = decodedValue;
-      console.log(req.user);
-      return next();
+      const blockFlag = await userModel.findOne({
+        _id: mongoose.Types.ObjectId(decodedValue._id),
+        isBlocked: true,
+      });
+      if (blockFlag) {
+        throw new HttpError(401, ErrorMessage.USER_BLOCKED);
+      } else {
+        req.user = decodedValue;
+        console.log(req.user);
+        return next();
+      }
     }
 
     throw new HttpError(401, ErrorMessage.STATUS_401_INVALID_TOKEN);

@@ -34,6 +34,7 @@ module.exports = Object.freeze({
   STATUS_401_INVALID_TOKEN: "The Token is invalid or expired",
   STATUS_403: "You do not have enough Privilages to perform this action",
   STATUS_401_USER_NOT_REGISTERED: "User does not exist",
+  USER_BLOCKED: "Your account has been deactivated",
 
   // project specific
 

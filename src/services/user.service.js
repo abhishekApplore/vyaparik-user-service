@@ -7,6 +7,20 @@ const Follower = require("../models/follower.model");
 const UserService = {};
 UserService.public = {};
 
+UserService.blockUnblockById = async (id, isBlocked) => {
+  try {
+    User.findOneAndUpdate(
+      {
+        _id: new mongoose.Types.ObjectId(id),
+      },
+      { isBlocked }
+    );
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
 UserService.findById = async (
   id,
   allowedFields = [],
@@ -14,9 +28,9 @@ UserService.findById = async (
 ) => {
   return User.findById(id, allowedFields).lean(lean);
 };
-UserService.find = (id) =>{ 
-  return User.find({_id:{$ne:id}})
-}
+UserService.find = (id) => {
+  return User.find({ _id: { $ne: id } });
+};
 UserService.topSellersViaFollowers = async (id) => {
   return User.aggregate([
     {
@@ -108,14 +122,13 @@ UserService.updateProfile = async (
   return await User.updateOne({ _id: id }, payload);
 };
 
-UserService.followUser = (uid, Id,type) => {
+UserService.followUser = (uid, Id, type) => {
   Id = mongoose.Types.ObjectId(Id);
-  uid = mongoose.Types.ObjectId(uid)
-  if(type == "SELLER"){
-
+  uid = mongoose.Types.ObjectId(uid);
+  if (type == "SELLER") {
     return Follower.create({ followingId: Id, userId: uid });
-  }else {
-    console.log("here", uid,Id);
+  } else {
+    console.log("here", uid, Id);
     return Follower.create({ followingId: Id, userId: uid });
   }
 };
@@ -135,39 +148,38 @@ UserService.followersList = async (userId) => {
 };
 
 UserService.followingList = async (userId) => {
-
   return Follower.aggregate([
     {
-      $facet:{
-        seller:[
+      $facet: {
+        seller: [
           {
-            $match:{ userId: mongoose.Types.ObjectId(userId),type:"SELLER" }
+            $match: { userId: mongoose.Types.ObjectId(userId), type: "SELLER" },
           },
           {
-            $lookup:{
-              from:"stores",
-              localField:"followingId",
-              foreignField:"_id",
-              as:"followingId"
-            }
-          }
+            $lookup: {
+              from: "stores",
+              localField: "followingId",
+              foreignField: "_id",
+              as: "followingId",
+            },
+          },
         ],
-        buyer:[
+        buyer: [
           {
-            $match:{ userId: mongoose.Types.ObjectId(userId),type:"BUYER" }
+            $match: { userId: mongoose.Types.ObjectId(userId), type: "BUYER" },
           },
           {
-            $lookup:{
-              from:"users",
-              localField:"followingId",
-              foreignField:"_id",
-              as:"followingId"
-            }
-          }
-        ]
-      }
-    }
-  ])
+            $lookup: {
+              from: "users",
+              localField: "followingId",
+              foreignField: "_id",
+              as: "followingId",
+            },
+          },
+        ],
+      },
+    },
+  ]);
 };
 
 UserService.createSeller = async (id, store) => {

@@ -29,14 +29,14 @@ const getUser = async (req, res) => {
     throw new HttpError(404, "User Not Found");
   }
 };
-const getAllUsers = async (req,res) => {
+const getAllUsers = async (req, res) => {
   try {
     const users = await UserService.find(req.user.uid);
-    Response(res).body(users).send()
+    Response(res).body(users).send();
   } catch (error) {
-    throw new HttpError(error.status,error.message)
+    throw new HttpError(error.status, error.message);
   }
-}
+};
 const getProfile = async (req, res) => {
   /*
   Work : Get user Profile for another user
@@ -52,6 +52,32 @@ const getProfile = async (req, res) => {
   }
 };
 
+const blockUnblockUser = async (req, res) => {
+  const id = req.params.id;
+  const requestType = parseInt(req.body.requestType);
+  try {
+    if (id) {
+      if (requestType === 0 || requestType === 1) {
+        const result = await UserService.blockUnblockById(
+          id,
+          requestType === 1 ? true : false
+        );
+        if (result) {
+          return Response(res).status(200).send();
+        } else {
+          throw new HttpError(400, "Some error occurred");
+        }
+      } else {
+        throw new HttpError(400, "Invalid request type");
+      }
+    } else {
+      throw new HttpError(400, "Invalid id");
+    }
+  } catch (err) {
+    throw new HttpError(400, "Some error occurred");
+  }
+};
+
 const getOwnSellerProfileWithFollowers = async (req, res) => {
   /*
   Work : Get user Profile for another user
@@ -59,8 +85,9 @@ const getOwnSellerProfileWithFollowers = async (req, res) => {
   try {
     const { uid } = req.user;
     const user = await StoreService.findExtraDetailsById(uid);
-    const products =
-      await ProductGRPC_ClientService.getAllProductsOfParticularUser(uid);
+    const products = await ProductGRPC_ClientService.getAllProductsOfParticularUser(
+      uid
+    );
     console.log(products);
 
     if (user && user.length > 0) {
@@ -83,8 +110,9 @@ const getAnotherSellerProfileWithFollowers = async (req, res) => {
     const uid = req.params.id;
     const user = await StoreService.findExtraDetailsById(uid);
     console.log({ user });
-    const products =
-      await ProductGRPC_ClientService.getAllProductsOfParticularUser(uid);
+    const products = await ProductGRPC_ClientService.getAllProductsOfParticularUser(
+      uid
+    );
     console.log(products);
 
     if (user) {
@@ -150,11 +178,11 @@ const profileSuggestion = async (req, res) => {
 
 const followUser = async (req, res) => {
   const { uid } = req.user;
-  const {type} = req.query;
+  const { type } = req.query;
   const id = req.params.id;
 
   try {
-    const followed = await UserService.followUser(uid, id,type);
+    const followed = await UserService.followUser(uid, id, type);
 
     Response(res)
       .status(200)
@@ -213,7 +241,10 @@ const followingList = async (req, res) => {
   try {
     const { uid } = req.user;
     const followingData = await UserService.followingList(uid);
-    Response(res).status(200).body([...followingData[0].seller,...followingData[0].buyer]).send();
+    Response(res)
+      .status(200)
+      .body([...followingData[0].seller, ...followingData[0].buyer])
+      .send();
   } catch (error) {
     throw new HttpError(400, error.message);
   }
@@ -246,9 +277,9 @@ const addAddress = async (req, res) => {
 
   try {
     let isDefault = false;
-    const address = await AddressService.find({userId:req.user.uid});
-    if(address && address.length < 1) {
-      isDefault = true
+    const address = await AddressService.find({ userId: req.user.uid });
+    if (address && address.length < 1) {
+      isDefault = true;
     }
     const newAddress = await AddressService.create({
       name: req.body.name,
@@ -259,7 +290,7 @@ const addAddress = async (req, res) => {
       state: req.body.state,
       city: req.body.city,
       type: req.body.type,
-      default:isDefault,
+      default: isDefault,
       address: req.body.address,
     });
 
@@ -474,10 +505,9 @@ const topSeller = async (req, res) => {
       users = await StoreService.topSellers();
     }
     for (let i = 0; i < users.length; i++) {
-      const userSold =
-        await ProductGRPC_ClientService.getNumberOfSoldProductsByUser(
-          users[i].user
-        );
+      const userSold = await ProductGRPC_ClientService.getNumberOfSoldProductsByUser(
+        users[i].user
+      );
       users[i].sold = userSold.sold;
     }
     users.sort((a, b) => b.sold - a.sold);
@@ -510,4 +540,5 @@ module.exports = {
   updateOwnSellerProfile,
   topSeller,
   getAnotherSellerProfileWithFollowers,
+  blockUnblockUser,
 };
