@@ -45,6 +45,32 @@ class DisputeController {
       .body(disputes)
       .send();
   };
+  updatesDisputeStatus = async (req, res) => {
+    if (req.user.role === "ADMIN") {
+      const AllStatus = ["Approved", "Pending", "Rejected"];
+      const id = req.params.id || "";
+      const status = req.body.status || "";
+      if (id) {
+        if (status && AllStatus.indexOf(status) !== -1) {
+          const result = await DisputeService.updateDispute(id, status);
+          if (result) {
+            Response(res)
+              .status(200)
+              .message("Dispute status updated successfully")
+              .send();
+          } else {
+            Response(res).status(400).message("Some error occured").send();
+          }
+        } else {
+          Response(res).status(400).message("Invalid status").send();
+        }
+      } else {
+        Response(res).status(400).message("Invalid dispute id").send();
+      }
+    } else {
+      Response(res).status(403).message("Not Authorized").send();
+    }
+  };
 }
 
 module.exports = DisputeController;

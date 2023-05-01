@@ -12,7 +12,7 @@ const Schema = mongoose.Schema(
     status: {
       type: String,
       enum: ["Approved", "Pending", "Rejected"],
-      // default: "Pending",
+      default: "Pending",
     },
     cause: {
       type: String,

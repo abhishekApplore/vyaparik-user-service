@@ -59,6 +59,15 @@ DisputeService.getAllDispute = ({ pageNumber, pageSize }) => {
   ]);
 };
 
+DisputeService.updateDispute = async (id, status) => {
+  try {
+    await Dispute.findByIdAndUpdate(id, { status });
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
 // DisputeService
 
 module.exports = DisputeService;

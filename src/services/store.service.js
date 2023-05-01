@@ -53,8 +53,33 @@ StoreService.findByIdAndUpdate = (id, body) => {
   return Store.findByIdAndUpdate(id, { ...body }, { new: true });
 };
 
-StoreService.findExtraDetailsById = (uid) => {
+StoreService.findExtraDetailsById = (uid, userId) => {
   return Store.aggregate([
+    {
+      $match: {
+        user: mongoose.Types.ObjectId(uid),
+      },
+    },
+    {
+      $lookup: {
+        from: "orders",
+        localField: "user",
+        foreignField: "sellerId",
+        as: "orders",
+        pipeline: [
+          {
+            $match: {
+              userId: mongoose.Types.ObjectId(userId),
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+            },
+          },
+        ],
+      },
+    },
     {
       $lookup: {
         from: "users",
@@ -66,11 +91,6 @@ StoreService.findExtraDetailsById = (uid) => {
     {
       $unwind: {
         path: "$user",
-      },
-    },
-    {
-      $match: {
-        "user._id": mongoose.Types.ObjectId(uid),
       },
     },
     {

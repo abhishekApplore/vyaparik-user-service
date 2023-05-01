@@ -13,6 +13,7 @@ const { ProductClient } = require("../grpc/clients");
 const ProductGRPC_ClientService = require("../grpc/clientServices/product-client-service");
 const sellerRequestService = require("../services/userRequest.service");
 const { sendNotification } = require("../setup/notification");
+const e = require("express");
 
 const getUser = async (req, res) => {
   /*
@@ -108,12 +109,16 @@ const getAnotherSellerProfileWithFollowers = async (req, res) => {
   */
   try {
     const uid = req.params.id;
-    const user = await StoreService.findExtraDetailsById(uid);
-    console.log({ user });
+    const user = await StoreService.findExtraDetailsById(uid, req?.user?._id);
+    if (user[0]?.orders?.length > 0) {
+      user[0].canReview = true;
+    } else {
+      user[0].canReview = false;
+    }
+    delete user[0].orders;
     const products = await ProductGRPC_ClientService.getAllProductsOfParticularUser(
       uid
     );
-    console.log(products);
 
     if (user) {
       console.log(products);
