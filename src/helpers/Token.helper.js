@@ -14,7 +14,7 @@ const TokenHelper = {};
 TokenHelper.createAccessToken = (uid, type, storeId) => {
   const token = jwt.sign({ uid, type, storeId }, JWT_ACCESS_TOKEN_PRIVATE_KEY, {
     // algorithm: "HS256",
-    // expiresIn: JWT_ACCESS_TOKEN_EXPIRY,
+    expiresIn: JWT_ACCESS_TOKEN_EXPIRY,
   });
 
   return token;

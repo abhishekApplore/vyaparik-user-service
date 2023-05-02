@@ -21,17 +21,20 @@ DisputeService.getAllDispute = ({ pageNumber, pageSize }) => {
   }
   return Dispute.aggregate([
     {
-      $skip: (parseInt(pgNo) - 1) * parseInt(pgSize),
-    },
-    {
-      $limit: parseInt(pgSize),
-    },
-    {
       $lookup: {
         from: "users",
         localField: "userId",
         foreignField: "_id",
         as: "user",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              fullName: 1,
+              picture: 1,
+            },
+          },
+        ],
       },
     },
     {
@@ -40,20 +43,29 @@ DisputeService.getAllDispute = ({ pageNumber, pageSize }) => {
         localField: "raisedBy",
         foreignField: "_id",
         as: "raisedBy",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              fullName: 1,
+              picture: 1,
+            },
+          },
+        ],
       },
     },
     {
-      $unwind: "$user",
+      $sort: {
+        updatedAt: -1,
+      },
     },
     {
-      $unwind: "$raisedBy",
-    },
-    {
-      $group: {
-        _id: "$_id",
+      $project: {
+        _id: 1,
+        cause: 1,
+        status: 1,
         user: { $first: "$user" },
         raisedBy: { $first: "$raisedBy" },
-        cause: { $first: "$cause" },
       },
     },
   ]);
