@@ -439,7 +439,6 @@ const becomeSupplier = async (req, res) => {
 
     if (req.user) {
       const user = await UserService.findById(req.user.uid);
-      console.log(user);
       await sendNotification(
         Constant.Notification.BECOME_A_SELLER.title,
         Constant.Notification.BECOME_A_SELLER.message,
