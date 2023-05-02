@@ -9,7 +9,7 @@ router.use(publicRouter);
 
 // Authenticated Route
 
-// router.use(AsyncHandler(AuthMiddleware));
+router.use(AsyncHandler(AuthMiddleware));
 
 router.use("/user", privateRouter);
 
