@@ -104,6 +104,7 @@ OTPService.send = async (mobileOrEmail, mode, user) => {
 
     console.log("OTP " + otp + " sent to email " + email);
   }
+  return otp;
 };
 
 OTPService.verify = async (mobileOrEmail, mode, otp) => {

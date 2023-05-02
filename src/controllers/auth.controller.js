@@ -90,15 +90,15 @@ const loginOrRegisterWithGoogle = async (req, res) => {
     // login
 
     let accessToken;
-      if (user.type == "SELLER") {
-        accessToken = TokenHelper.createAccessToken(
-          user._id,
-          user.type,
-          user.storeId
-        );
-      } else {
-        accessToken = TokenHelper.createAccessToken(user._id, user.type);
-      }
+    if (user.type == "SELLER") {
+      accessToken = TokenHelper.createAccessToken(
+        user._id,
+        user.type,
+        user.storeId
+      );
+    } else {
+      accessToken = TokenHelper.createAccessToken(user._id, user.type);
+    }
     const refreshToken = TokenHelper.createRefreshToken(user._id);
 
     Response(res)
@@ -126,7 +126,7 @@ const loginOrRegisterWithGoogle = async (req, res) => {
     });
     const accessToken = TokenHelper.createAccessToken(
       newUser._id,
-      newUser.type,
+      newUser.type
     );
     const refreshToken = TokenHelper.createRefreshToken(newUser._id);
 
@@ -393,12 +393,18 @@ const sendOTP = async (req, res) => {
   if (user && user.strategies.includes(Constant.User.Strategies.PASSWORD))
     throw new HttpError(409, "User Already Exists!!");
   try {
-    await OTPService.send(mobile ?? email, mode);
+    const result = await OTPService.send(mobile ?? email, mode);
+
+    Response(res)
+      .status(200)
+      .message("OTP Sent Successfully")
+      .body({
+        otp: result,
+      })
+      .send();
   } catch (error) {
     throw new HttpError(500, error.message, error.stack);
   }
-
-  Response(res).status(200).message("OTP Sent Successfully").send();
 };
 
 const exchangeRefreshTokenForAccessToken = async (req, res) => {

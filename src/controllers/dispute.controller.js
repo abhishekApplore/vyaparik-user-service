@@ -3,6 +3,7 @@ const ErrorMessage = require("../constants/ErrorMessage");
 const HttpError = require("../helpers/HttpError");
 const Response = require("../Response");
 const DisputeService = require("../services/dispute.service");
+const { sendNotification } = require("../setup/notification");
 // const UserService = require("../../../../vyaparik-user-service/src/services/user.service");
 
 class DisputeController {
@@ -36,6 +37,12 @@ class DisputeController {
       pageNumber,
       pageSize,
     });
+
+    await sendNotification(
+      "Warning",
+      "Your account has been blocked",
+      token.token
+    );
 
     if (!disputes) Response(res).status(204).message("No Dispute Found").send();
 
