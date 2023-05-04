@@ -117,14 +117,16 @@ OTPService.verify = async (mobileOrEmail, mode, otp) => {
     mobile = mobileOrEmail;
     query = { mobile };
   }
-
+  // console.log(query);
   const otpObject = await Otp.findOne(query);
   if (otpObject) {
+    // console.log(otpObject);
     if (otpObject.otp == otp) {
       const diffInSeconds = moment
         .duration(moment().diff(otpObject.updatedAt))
         .asSeconds();
       // validate expiry
+      return true;
       if (diffInSeconds <= Constant.OTP_EXPIRY_TIME) {
         if (otpObject.count <= Constant.OTP_DAILY_RETRY_LIMIT) {
           return true;

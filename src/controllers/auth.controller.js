@@ -261,11 +261,16 @@ const loginOrRegisterWithOTP = async (req, res) => {
           : [Constant.User.Strategies.EMAIL_OTP];
       // TODO: validate email and mobile if already exists
       const newUser = await UserService.create({ mobile, email, strategies });
-      const accessToken = TokenHelper.createAccessToken(
-        newUser._id,
-        newUser.type,
-        user.storeId
-      );
+      let accessToken = null;
+      if (newUser.storeId) {
+        accessToken = TokenHelper.createAccessToken(
+          newUser._id,
+          newUser.type,
+          newUser.storeId
+        );
+      } else {
+        accessToken = TokenHelper.createAccessToken(newUser._id, newUser.type);
+      }
       const refreshToken = TokenHelper.createRefreshToken(newUser._id);
 
       Response(res)
@@ -322,6 +327,8 @@ const verifyOTP = async (req, res) => {
   */
 
   var { mobile, otp, email } = req.body;
+
+  console.log(req.body);
 
   var mode;
   let user;
