@@ -26,6 +26,7 @@ const AuthMiddleware = async (req, res, next) => {
   try {
     if (token) {
       const decodedValue = TokenHelper.verifyAccessToken(token);
+      console.log();
       if (decodedValue) {
         const blockFlag = await userModel.findOne({
           _id: mongoose.Types.ObjectId(decodedValue._id),
