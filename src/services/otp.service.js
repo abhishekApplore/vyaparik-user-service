@@ -126,7 +126,6 @@ OTPService.verify = async (mobileOrEmail, mode, otp) => {
         .duration(moment().diff(otpObject.updatedAt))
         .asSeconds();
       // validate expiry
-      return true;
       if (diffInSeconds <= Constant.OTP_EXPIRY_TIME) {
         if (otpObject.count <= Constant.OTP_DAILY_RETRY_LIMIT) {
           return true;
