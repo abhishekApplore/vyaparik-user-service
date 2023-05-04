@@ -13,7 +13,6 @@ const userModel = require("../models/user.model");
 
 const AuthMiddleware = async (req, res, next) => {
   const headerToken = req.headers.authorization;
-
   if (!headerToken) {
     throw new HttpError(401, ErrorMessage.STATUS_401_NO_TOKEN);
   }
@@ -25,23 +24,25 @@ const AuthMiddleware = async (req, res, next) => {
   const token = headerToken.split(" ")[1];
 
   try {
-    const decodedValue = TokenHelper.verifyAccessToken(token);
-
-    if (decodedValue) {
-      const blockFlag = await userModel.findOne({
-        _id: mongoose.Types.ObjectId(decodedValue._id),
-        isBlocked: true,
-      });
-      if (blockFlag) {
-        throw new HttpError(401, ErrorMessage.USER_BLOCKED);
-      } else {
-        req.user = decodedValue;
-        console.log(req.user);
-        return next();
+    if (token) {
+      const decodedValue = TokenHelper.verifyAccessToken(token);
+      if (decodedValue) {
+        const blockFlag = await userModel.findOne({
+          _id: mongoose.Types.ObjectId(decodedValue._id),
+          isBlocked: true,
+        });
+        if (blockFlag) {
+          throw new HttpError(401, ErrorMessage.USER_BLOCKED);
+        } else {
+          req.user = decodedValue;
+          return next();
+        }
       }
-    }
 
-    throw new HttpError(401, ErrorMessage.STATUS_401_INVALID_TOKEN);
+      throw new HttpError(401, ErrorMessage.STATUS_401_INVALID_TOKEN);
+    } else {
+      throw new HttpError(401, ErrorMessage.STATUS_401_INVALID_TOKEN);
+    }
   } catch (error) {
     console.log("Token Middleware Error: ", error.message);
 

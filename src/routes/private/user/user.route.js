@@ -37,7 +37,7 @@ userRoute.get("/profileSuggestion", AsyncHandler(profileSuggestion));
 userRoute.post("/follow/:id", AsyncHandler(followUser));
 userRoute.post("/follow/seller/:id", AsyncHandler(followUserViaSeller));
 userRoute.delete("/unfollow/:id", AsyncHandler(unFollowUser));
-userRoute.put("/", AsyncHandler(updateProfile));
+userRoute.put("/", AsyncHandler(AuthMiddleware), AsyncHandler(updateProfile));
 userRoute.post(
   "/addAddress",
   AsyncHandler(AuthMiddleware),

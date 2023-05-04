@@ -21,13 +21,13 @@ const ConditionalAuthMiddleware = async (req, res, next) => {
   }
   console.log("woking");
   const token = headerToken.split(" ")[1];
+  console.log(token);
 
   try {
     const decodedValue = TokenHelper.verifyAccessToken(token);
 
     if (decodedValue) {
       req.user = decodedValue;
-      console.log(req.user);
       return next();
     }
 
