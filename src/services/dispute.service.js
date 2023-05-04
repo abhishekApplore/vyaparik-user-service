@@ -30,7 +30,7 @@ DisputeService.getAllDispute = ({ pageNumber, pageSize }) => {
           {
             $project: {
               _id: 1,
-              fullName: 1,
+              fullname: 1,
               picture: 1,
             },
           },
