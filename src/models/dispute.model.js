@@ -8,11 +8,9 @@ const Schema = mongoose.Schema(
       ref: "user",
       default: null,
     },
-
-    status: {
-      type: String,
-      enum: ["Approved", "Pending", "Rejected"],
-      default: "Pending",
+    isActive: {
+      type: Boolean,
+      default: true,
     },
     cause: {
       type: String,

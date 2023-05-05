@@ -83,7 +83,7 @@ try {
     app.use(errorMiddleware);
   }
 
-  app.listen(PORT, () => {
+  app.listen(PORT, async () => {
     logger.info("Server is Listening at PORT " + PORT + ", Version: 1.0");
   });
 

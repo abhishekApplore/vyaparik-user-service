@@ -1,4 +1,8 @@
+const { default: mongoose } = require("mongoose");
 const Dispute = require("../models/dispute.model");
+const User = require("../models/user.model");
+const { sendNotification } = require("../setup/notification");
+const Constant = require("../constants/Constant");
 
 const DisputeService = {};
 
@@ -20,6 +24,11 @@ DisputeService.getAllDispute = ({ pageNumber, pageSize }) => {
     pgSize = 1000;
   }
   return Dispute.aggregate([
+    {
+      $match: {
+        isActive: true,
+      },
+    },
     {
       $lookup: {
         from: "users",
@@ -71,9 +80,58 @@ DisputeService.getAllDispute = ({ pageNumber, pageSize }) => {
   ]);
 };
 
-DisputeService.updateDispute = async (id, status) => {
+DisputeService.markAsComplete = async (id) => {
   try {
-    await Dispute.findByIdAndUpdate(id, { status });
+    await Dispute.findByIdAndUpdate(id, { isActive: false });
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+DisputeService.sendWarning = async (id) => {
+  try {
+    const dispute = await Dispute.findOneAndUpdate(
+      { _id: mongoose.Types.ObjectId(id) },
+      { isActive: false },
+      { new: true }
+    ).lean();
+    const user = await User.findById(dispute.userId).lean();
+    if (user.fcmTokens) {
+      await sendNotification(
+        Constant.Notification.DISPUTE_WARNING.title,
+        Constant.Notification.DISPUTE_WARNING.message,
+        user.fcmTokens
+      );
+    }
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+DisputeService.blockUser = async (id) => {
+  try {
+    const dispute = await Dispute.findOneAndUpdate(
+      { _id: mongoose.Types.ObjectId(id) },
+      { isActive: false },
+      { new: true }
+    ).lean();
+    const blockTime = new Date().getTime() + 24 * 7 * 60 * 60 * 1000;
+    const user = await User.findOneAndUpdate(
+      {
+        _id: mongoose.Types.ObjectId(dispute.userId),
+      },
+      { blockTime },
+      { new: true }
+    ).lean();
+    if (user.fcmTokens) {
+      await sendNotification(
+        Constant.Notification.DISPUTE_BLOCK.title,
+        Constant.Notification.DISPUTE_BLOCK.message,
+        user.fcmTokens
+      );
+    }
     return true;
   } catch (err) {
     return false;

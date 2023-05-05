@@ -99,6 +99,10 @@ const Schema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    blockTime: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

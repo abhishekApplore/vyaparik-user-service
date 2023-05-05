@@ -32,6 +32,14 @@ module.exports = Object.freeze({
       title: "You have Successfully applied for a seller",
       message: "Please wait till admin check your request!",
     },
+    DISPUTE_WARNING: {
+      title: "Warning",
+      message: "Your account is being spammed",
+    },
+    DISPUTE_BLOCK: {
+      title: "Account deactivation",
+      message: "Your account has been deactivated",
+    },
     REQUEST_ADMIN: {
       title: "A buyer have requested to become a seller",
       message: "Click to check request",

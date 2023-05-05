@@ -15,10 +15,15 @@ router.post(
   AsyncHandler(AuthMiddleware),
   AsyncHandler(dispute.createDispute)
 );
-router.patch(
-  "/update-status/:id",
+router.post(
+  "/warning/:id",
   AsyncHandler(AuthMiddleware),
-  AsyncHandler(dispute.updatesDisputeStatus)
+  AsyncHandler(dispute.sendWarning)
 );
 
+router.post(
+  "/block/:id",
+  AsyncHandler(AuthMiddleware),
+  AsyncHandler(dispute.blockUser)
+);
 module.exports = router;
