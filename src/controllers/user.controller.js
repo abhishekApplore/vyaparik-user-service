@@ -31,7 +31,7 @@ const getUser = async (req, res) => {
   }
 };
 const getAllUsers = async (req, res) => {
-  if (req?.user?.role === "ADMIN") {
+  if (req.user.type === "ADMIN") {
     try {
       const users = await UserService.find();
       Response(res).body(users).send();

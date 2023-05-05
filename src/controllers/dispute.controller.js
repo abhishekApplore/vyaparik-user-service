@@ -53,7 +53,7 @@ class DisputeController {
       .send();
   };
   sendWarning = async (req, res) => {
-    if (req.user.role === "ADMIN") {
+    if (req.user.type === "ADMIN") {
       const id = req.params.id || "";
       if (id) {
         if (result) {
@@ -73,7 +73,7 @@ class DisputeController {
   };
 
   blockUser = async (req, res) => {
-    if (req.user.role === "ADMIN") {
+    if (req.user.type === "ADMIN") {
       const id = req.params.id || "";
       if (id) {
         if (result) {
