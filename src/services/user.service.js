@@ -28,8 +28,8 @@ UserService.findById = async (
 ) => {
   return User.findById(id, allowedFields).lean(lean);
 };
-UserService.find = (id) => {
-  return User.find({ _id: { $ne: id } });
+UserService.find = () => {
+  return User.find({ role: { $in: ["BUYER", "SELLER"] } });
 };
 UserService.topSellersViaFollowers = async (id) => {
   return User.aggregate([

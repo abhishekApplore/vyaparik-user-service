@@ -31,7 +31,11 @@ const AuthMiddleware = require("../../../middlewares/auth.middleware");
 const userRoute = require("express").Router();
 
 userRoute.use(AsyncHandler(AuthMiddleware));
-userRoute.get("/admin", AsyncHandler(getAllUsers));
+userRoute.get(
+  "/admin",
+  AsyncHandler(AuthMiddleware),
+  AsyncHandler(getAllUsers)
+);
 userRoute.get("/", AsyncHandler(getUser));
 userRoute.get("/followersList", AsyncHandler(followerList));
 userRoute.get("/followingList", AsyncHandler(followingList));

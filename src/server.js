@@ -1,5 +1,6 @@
 const { GRPCServer } = require("./grpc/grpcServer");
 const logger = require("./helpers/logger");
+const userModel = require("./models/user.model");
 try {
   const { PORT, NODE_ENV, PROJECT_NAME, ORIGIN } = require("./config/");
   const express = require("express");

@@ -31,11 +31,15 @@ const getUser = async (req, res) => {
   }
 };
 const getAllUsers = async (req, res) => {
-  try {
-    const users = await UserService.find(req.user.uid);
-    Response(res).body(users).send();
-  } catch (error) {
-    throw new HttpError(error.status, error.message);
+  if (req?.user?.role === "ADMIN") {
+    try {
+      const users = await UserService.find();
+      Response(res).body(users).send();
+    } catch (error) {
+      throw new HttpError(error.status, error.message);
+    }
+  } else {
+    Response(res).status(403).message("Not Authorized").send();
   }
 };
 const getProfile = async (req, res) => {
