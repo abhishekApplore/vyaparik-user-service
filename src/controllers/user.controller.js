@@ -68,18 +68,21 @@ const blockUnblockUser = async (req, res) => {
           requestType === 1 ? true : false
         );
         if (result) {
-          return Response(res).status(200).send();
+          return Response(res)
+            .status(200)
+            .message("user blocked successfully")
+            .send();
         } else {
-          throw new HttpError(400, "Some error occurred");
+          Response(res).status(400).message("Some error occured").send();
         }
       } else {
-        throw new HttpError(400, "Invalid request type");
+        Response(res).status(400).message("Invalid request type").send();
       }
     } else {
-      throw new HttpError(400, "Invalid id");
+      Response(res).status(400).message("Invalid id").send();
     }
   } catch (err) {
-    throw new HttpError(400, "Some error occurred");
+    Response(res).status(400).message("Some error occured").send();
   }
 };
 

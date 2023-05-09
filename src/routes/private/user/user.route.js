@@ -31,11 +31,7 @@ const AuthMiddleware = require("../../../middlewares/auth.middleware");
 const userRoute = require("express").Router();
 
 userRoute.use(AsyncHandler(AuthMiddleware));
-userRoute.get(
-  "/admin",
-  AsyncHandler(AuthMiddleware),
-  AsyncHandler(getAllUsers)
-);
+userRoute.get("/admin", AsyncHandler(getAllUsers));
 userRoute.get("/", AsyncHandler(getUser));
 userRoute.get("/followersList", AsyncHandler(followerList));
 userRoute.get("/followingList", AsyncHandler(followingList));
@@ -43,17 +39,9 @@ userRoute.get("/profileSuggestion", AsyncHandler(profileSuggestion));
 userRoute.post("/follow/:id", AsyncHandler(followUser));
 userRoute.post("/follow/seller/:id", AsyncHandler(followUserViaSeller));
 userRoute.delete("/unfollow/:id", AsyncHandler(unFollowUser));
-userRoute.put("/", AsyncHandler(AuthMiddleware), AsyncHandler(updateProfile));
-userRoute.post(
-  "/addAddress",
-  AsyncHandler(AuthMiddleware),
-  AsyncHandler(addAddress)
-);
-userRoute.get(
-  "/address",
-  AsyncHandler(AuthMiddleware),
-  AsyncHandler(getAllAddressOfMyself)
-);
+userRoute.put("/", AsyncHandler(updateProfile));
+userRoute.post("/addAddress", AsyncHandler(addAddress));
+userRoute.get("/address", AsyncHandler(getAllAddressOfMyself));
 userRoute.get("/:id", AsyncHandler(getProfile));
 userRoute.get("/seller/me", AsyncHandler(getOwnSellerProfileWithFollowers));
 userRoute.get(
