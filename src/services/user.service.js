@@ -9,9 +9,9 @@ UserService.public = {};
 
 UserService.blockUnblockById = async (id, isBlocked) => {
   try {
-    User.findOneAndUpdate(
+    await User.findOneAndUpdate(
       {
-        _id: new mongoose.Types.ObjectId(id),
+        _id: mongoose.Types.ObjectId(id),
       },
       { isBlocked }
     );

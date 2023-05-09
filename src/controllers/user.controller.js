@@ -70,7 +70,11 @@ const blockUnblockUser = async (req, res) => {
         if (result) {
           return Response(res)
             .status(200)
-            .message("user blocked successfully")
+            .message(
+              requestType === 0
+                ? "user blocked successfully"
+                : "user unblocked successfully"
+            )
             .send();
         } else {
           Response(res).status(400).message("Some error occured").send();
