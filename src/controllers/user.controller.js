@@ -65,7 +65,7 @@ const blockUnblockUser = async (req, res) => {
       if (requestType === 0 || requestType === 1) {
         const result = await UserService.blockUnblockById(
           id,
-          requestType === 1 ? true : false
+          requestType === 1 ? false : true
         );
         if (result) {
           return Response(res)
