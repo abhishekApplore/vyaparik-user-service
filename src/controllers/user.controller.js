@@ -95,10 +95,12 @@ const getOwnSellerProfileWithFollowers = async (req, res) => {
   Work : Get user Profile for another user
   */
   try {
-    const { uid } = req.user;
-    const user = await StoreService.findExtraDetailsById(uid);
+    // const { uid } = req.user;
+    const user = await StoreService.findExtraDetailsById(
+      "6461fc09c250e35718840253"
+    );
     const products = await ProductGRPC_ClientService.getAllProductsOfParticularUser(
-      uid
+      "6461fc09c250e35718840253"
     );
 
     console.log(user);

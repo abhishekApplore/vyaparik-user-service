@@ -82,19 +82,6 @@ StoreService.findExtraDetailsById = (uid, userId) => {
     },
     {
       $lookup: {
-        from: "users",
-        localField: "_id",
-        foreignField: "storeId",
-        as: "user",
-      },
-    },
-    {
-      $unwind: {
-        path: "$user",
-      },
-    },
-    {
-      $lookup: {
         from: "followers",
         localField: "user._id",
         foreignField: "userId",
@@ -104,9 +91,22 @@ StoreService.findExtraDetailsById = (uid, userId) => {
     {
       $lookup: {
         from: "followers",
-        localField: "_id",
+        localField: "user",
         foreignField: "followingId",
         as: "followers",
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "_id",
+        foreignField: "storeId",
+        as: "user",
+      },
+    },
+    {
+      $unwind: {
+        path: "$user",
       },
     },
     {
