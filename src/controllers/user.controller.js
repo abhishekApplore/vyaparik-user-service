@@ -100,17 +100,17 @@ const getOwnSellerProfileWithFollowers = async (req, res) => {
     const products = await ProductGRPC_ClientService.getAllProductsOfParticularUser(
       uid
     );
-    console.log(products);
+
+    console.log(user);
 
     if (user && user.length > 0) {
-      console.log(products);
       user[0].products = products?.product?.length;
       return Response(res).status(200).body(user).send();
     } else {
-      throw new HttpError(404, "User Not Found");
+      return Response(res).status(404).message("User not found").send();
     }
   } catch (ex) {
-    throw new HttpError(ex.status, ex.message);
+    return Response(res).status(400).message(ex.message).send();
   }
 };
 

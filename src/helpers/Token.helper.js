@@ -13,7 +13,6 @@ const TokenHelper = {};
 
 TokenHelper.createAccessToken = (uid, type, storeId) => {
   const token = jwt.sign({ uid, type, storeId }, JWT_ACCESS_TOKEN_PRIVATE_KEY, {
-    algorithm: "HS256",
     expiresIn: JWT_ACCESS_TOKEN_EXPIRY,
   });
 
@@ -22,7 +21,6 @@ TokenHelper.createAccessToken = (uid, type, storeId) => {
 
 TokenHelper.createRefreshToken = (uid) => {
   const token = jwt.sign({ uid }, JWT_REFRESH_TOKEN_PRIVATE_KEY, {
-    algorithm: "HS256",
     expiresIn: JWT_REFRESH_TOKEN_EXPIRY,
   });
 
@@ -31,7 +29,6 @@ TokenHelper.createRefreshToken = (uid) => {
 
 TokenHelper.createTransferToken = (session) => {
   const token = jwt.sign({ session }, JWT_TRANSFER_TOKEN_PRIVATE_KEY, {
-    algorithm: "HS256",
     expiresIn: JWT_TRANSFER_TOKEN_EXPIRY,
   });
 

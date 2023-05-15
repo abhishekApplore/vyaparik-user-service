@@ -22,14 +22,14 @@ const AuthMiddleware = async (req, res, next) => {
   }
 
   const token = headerToken.split(" ")[1];
+  console.log(token);
 
   try {
     if (token) {
       const decodedValue = TokenHelper.verifyAccessToken(token);
-      console.log();
       if (decodedValue) {
         const user = await userModel.findOne({
-          _id: mongoose.Types.ObjectId(decodedValue._id),
+          _id: mongoose.Types.ObjectId(decodedValue.uid),
         });
         if (user?.isBlocked || new Date().getTime() <= user?.blockTime) {
           throw new HttpError(401, ErrorMessage.USER_BLOCKED);
