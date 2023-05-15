@@ -1,5 +1,5 @@
 const Constant = require("../constants/Constant");
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const Utils = require("../helpers/utils.helper");
 const User = require("../models/user.model");
 const Store = require("../models/store.model");
@@ -185,7 +185,10 @@ UserService.followingList = async (userId) => {
 UserService.createSeller = async (id, store) => {
   console.log("createSeller", store);
 
-  return User.findByIdAndUpdate(id, { type: "SELLER", storeId: store._id });
+  return User.findByIdAndUpdate(
+    { _id: mongoose.Types.ObjectId(id) },
+    { type: "SELLER", storeId: store._id }
+  );
 };
 UserService.findByMobile = async (mobile) => {
   return User.findOne({ mobile });
