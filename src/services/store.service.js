@@ -49,7 +49,6 @@ StoreService.findOne = (data) => {
   return Store.findOne({ ...data });
 };
 StoreService.findByIdAndUpdate = (id, body) => {
-  console.log({ id, body });
   return Store.findByIdAndUpdate(id, { ...body }, { new: true });
 };
 
@@ -94,6 +93,32 @@ StoreService.findExtraDetailsById = (uid, userId) => {
         localField: "user",
         foreignField: "followingId",
         as: "followers",
+        pipeline: [
+          {
+            $lookup: {
+              from: "users",
+              localField: "followingId",
+              foreignField: "_id",
+              as: "userInfo",
+              pipeline: [
+                {
+                  $project: {
+                    _id: 1,
+                    fullname: 1,
+                    picture: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $project: {
+              _id: { $first: "$userInfo._id" },
+              fullname: { $first: "$userInfo.fullname" },
+              picture: { $first: "$userInfo.picture" },
+            },
+          },
+        ],
       },
     },
     {

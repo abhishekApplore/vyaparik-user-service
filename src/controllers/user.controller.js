@@ -134,7 +134,6 @@ const getAnotherSellerProfileWithFollowers = async (req, res) => {
     );
 
     if (user) {
-      console.log(products);
       user[0].products = products.product.length;
       return Response(res).status(200).body(user).send();
     } else {
