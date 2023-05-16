@@ -42,9 +42,9 @@ class SellerRequestController {
         changing status
     */
     const { status } = req.body;
-    console.log(status);
     try {
       if (status && (status == "Approved" || status == "Rejected")) {
+        const seller = await UserService.findById(req.params.id);
         const requests = await sellerRequestService.update(req.params.id, {
           status,
         });
@@ -59,12 +59,11 @@ class SellerRequestController {
             store
           );
           //   console.log("Here");
-          if (req.user) {
-            const user = await UserService.findById(req.user.uid);
+          if (seller?.fcmTokens) {
             await sendNotification(
               Constant.Notification.REQUEST_APPROVED.title,
               Constant.Notification.REQUEST_APPROVED.message,
-              user.fcmTokens
+              seller.fcmTokens
             );
           }
           Response(res)
@@ -73,12 +72,11 @@ class SellerRequestController {
             .send();
         } else {
           //   console.log("Here2");
-          if (req.user) {
-            const user = await UserService.findById(req.user.uid);
+          if (seller?.fcmTokens) {
             await sendNotification(
               Constant.Notification.REQUEST_REJECT.title,
               Constant.Notification.REQUEST_REJECT.message,
-              user.fcmTokens
+              seller.fcmTokens
             );
           }
           Response(res)

@@ -187,8 +187,9 @@ UserService.createSeller = async (id, store) => {
 
   return User.findByIdAndUpdate(
     { _id: mongoose.Types.ObjectId(id) },
-    { type: "SELLER", storeId: store._id }
-  );
+    { type: "SELLER", storeId: store._id },
+    { new: true }
+  ).lean();
 };
 UserService.findByMobile = async (mobile) => {
   return User.findOne({ mobile });

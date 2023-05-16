@@ -46,7 +46,8 @@ module.exports = Object.freeze({
     },
     REQUEST_APPROVED: {
       title: "Your request for becoming a Seller is approved by Admin",
-      message: "Now You can start Selling your Product!",
+      message:
+        "Great news! Your GST application has been approved. It's time to add your products and start selling like a pro!",
     },
     REQUEST_REJECT: {
       title: "Your request for becoming a Seller is rejected by Admin",
