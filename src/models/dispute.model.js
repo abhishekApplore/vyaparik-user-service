@@ -6,7 +6,7 @@ const Schema = mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
-      default: null,
+      rquired: true,
     },
     isActive: {
       type: Boolean,
@@ -17,6 +17,8 @@ const Schema = mongoose.Schema(
     },
     raisedBy: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      rquired: true,
     },
   },
   {

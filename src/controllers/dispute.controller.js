@@ -13,7 +13,7 @@ class DisputeController {
         */
 
     const data = {
-      userId: req.user.uid,
+      userId: mongoose.Types.ObjectId(req.user.uid),
       cause: req.body.cause,
       raisedBy: mongoose.Types.ObjectId(req.params.id),
     };
