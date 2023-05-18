@@ -10,6 +10,7 @@ const ErrorMessage = require("../constants/ErrorMessage");
 const HttpError = require("../helpers/HttpError");
 const TokenHelper = require("../helpers/Token.helper");
 const userModel = require("../models/user.model");
+const Response = require("../Response");
 
 const AuthMiddleware = async (req, res, next) => {
   const headerToken = req.headers.authorization;
@@ -22,7 +23,6 @@ const AuthMiddleware = async (req, res, next) => {
   }
 
   const token = headerToken.split(" ")[1];
-  console.log(token);
 
   try {
     if (token) {
@@ -32,7 +32,11 @@ const AuthMiddleware = async (req, res, next) => {
           _id: mongoose.Types.ObjectId(decodedValue.uid),
         });
         if (user?.isBlocked || new Date().getTime() <= user?.blockTime) {
-          throw new HttpError(401, ErrorMessage.USER_BLOCKED);
+          Response(res)
+            .status(401)
+            .body({ isBlocked: true })
+            .message(ErrorMessage.USER_BLOCKED)
+            .send();
         } else {
           req.user = decodedValue;
           return next();
