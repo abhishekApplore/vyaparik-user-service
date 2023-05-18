@@ -30,7 +30,6 @@ const loginWithPassword = async (req, res) => {
     mode,
     password
   );
-  console.log("verify 2", verified);
   try {
     if (verified) {
       const user =
@@ -39,6 +38,15 @@ const loginWithPassword = async (req, res) => {
           : await UserService.findByMobile(mobile);
 
       if (user) {
+        if (user.isBlocked) {
+          return Response(res)
+            .status(401)
+            .message(ErrorMessage.USER_BLOCKED)
+            .body({
+              isBlocked: true,
+            })
+            .send();
+        }
         // login
         let accessToken;
         if (user.type == "SELLER") {
@@ -88,6 +96,15 @@ const loginOrRegisterWithGoogle = async (req, res) => {
 
   if (user) {
     // login
+    if (user.isBlocked) {
+      return Response(res)
+        .status(401)
+        .message(ErrorMessage.USER_BLOCKED)
+        .body({
+          isBlocked: true,
+        })
+        .send();
+    }
 
     let accessToken;
     if (user.type == "SELLER") {
@@ -158,7 +175,15 @@ const loginOrRegisterWithFacebook = async (req, res) => {
 
   if (user) {
     // login
-
+    if (user.isBlocked) {
+      return Response(res)
+        .status(401)
+        .message(ErrorMessage.USER_BLOCKED)
+        .body({
+          isBlocked: true,
+        })
+        .send();
+    }
     const accessToken = TokenHelper.createAccessToken(user._id);
     const refreshToken = TokenHelper.createRefreshToken(user._id);
 
@@ -226,6 +251,15 @@ const loginOrRegisterWithOTP = async (req, res) => {
         ? await UserService.findByEmail(email)
         : await UserService.findByMobile(mobile);
     if (user) {
+      if (user.isBlocked) {
+        return Response(res)
+          .status(401)
+          .message(ErrorMessage.USER_BLOCKED)
+          .body({
+            isBlocked: true,
+          })
+          .send();
+      }
       // login
       if (user.strategies.includes(Constant.User.Strategies.PASSWORD)) {
         throw new HttpError(409, "User Already Exists!!");
@@ -312,6 +346,15 @@ const forgotPassword = async (req, res) => {
   }
   console.log(user);
   if (!user) throw new HttpError(400, "User doesn't Exists");
+  if (user.isBlocked) {
+    return Response(res)
+      .status(401)
+      .message(ErrorMessage.USER_BLOCKED)
+      .body({
+        isBlocked: true,
+      })
+      .send();
+  }
   try {
     await OTPService.send(mobile ?? email, mode);
   } catch (error) {
@@ -342,6 +385,15 @@ const verifyOTP = async (req, res) => {
     user = await UserService.findByEmail(email);
   }
   if (!user) throw new HttpError(400, "User doesn't Exists");
+  if (user.isBlocked) {
+    return Response(res)
+      .status(401)
+      .message(ErrorMessage.USER_BLOCKED)
+      .body({
+        isBlocked: true,
+      })
+      .send();
+  }
   try {
     await OTPService.verify(mobile ?? email, mode, otp);
   } catch (error) {
@@ -371,7 +423,15 @@ const resetPassword = async (req, res) => {
     mode == Constant.TYPE_EMAIL
       ? await UserService.findByEmail(email)
       : await UserService.findByMobile(mobile);
-  console.log(user);
+  if (user.isBlocked) {
+    return Response(res)
+      .status(401)
+      .message(ErrorMessage.USER_BLOCKED)
+      .body({
+        isBlocked: true,
+      })
+      .send();
+  }
   if (user && user.strategies.includes(Constant.User.Strategies.PASSWORD)) {
     await UserService.updateProfile(user._id, { password });
     Response(res).status(200).message("Password Reset Success").send();
@@ -396,6 +456,15 @@ const sendOTP = async (req, res) => {
     mode = Constant.TYPE_EMAIL;
     user = await UserService.findByEmail(email);
     // for email
+  }
+  if (user.isBlocked) {
+    return Response(res)
+      .status(401)
+      .message(ErrorMessage.USER_BLOCKED)
+      .body({
+        isBlocked: true,
+      })
+      .send();
   }
   if (user && user.strategies.includes(Constant.User.Strategies.PASSWORD))
     throw new HttpError(409, "User Already Exists!!");
@@ -423,6 +492,15 @@ const exchangeRefreshTokenForAccessToken = async (req, res) => {
 
     const payload = TokenHelper.verifyRefreshToken(refreshToken);
     const user = await UserService.findById(payload.uid);
+    if (user.isBlocked) {
+      return Response(res)
+        .status(401)
+        .message(ErrorMessage.USER_BLOCKED)
+        .body({
+          isBlocked: true,
+        })
+        .send();
+    }
     if (payload) {
       Response(res)
         .status(200)
