@@ -4,7 +4,6 @@ const User = require("../models/user.model");
 const Notifications = require("../models/notifications.model");
 const { sendNotification } = require("../setup/notification");
 const Constant = require("../constants/Constant");
-const Notifications = require("../models/notifications.model");
 
 const DisputeService = {};
 
