@@ -20,7 +20,7 @@ const getNotifications = async (req, res) => {
     const userId = mongoose.Types.ObjectId(req?.user?.uid);
     const notifications = await Notifications.find(
       { userId },
-      { _id: 1, title: 1, message: 1 }
+      { _id: 1, title: 1, message: 1, createdAt: 1 }
     ).lean();
     Response(res)
       .status(200)
