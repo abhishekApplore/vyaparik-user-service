@@ -33,12 +33,13 @@ module.exports = Object.freeze({
       message: "Please wait till admin check your request!",
     },
     DISPUTE_WARNING: {
-      title: "Warning",
-      message: "Your account is being spammed",
+      title: "Account deactivation waring",
+      message:
+        "Your account will be temporarily deactivated for 7 days if we receive another report against you",
     },
     DISPUTE_BLOCK: {
       title: "Account deactivation",
-      message: "Your account has been deactivated",
+      message: "Your account has been deactivated for 7 days",
     },
     REQUEST_ADMIN: {
       title: "A buyer have requested to become a seller",

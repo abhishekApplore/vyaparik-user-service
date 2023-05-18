@@ -6,6 +6,7 @@ const Response = require("../Response");
 const StoreService = require("../services/store.service");
 const UserService = require("../services/user.service");
 const sellerRequestService = require("../services/userRequest.service");
+const Notifications = require("../models/notifications.model");
 const { sendNotification } = require("../setup/notification");
 
 class SellerRequestController {
@@ -58,7 +59,13 @@ class SellerRequestController {
             mongoose.Types.ObjectId(requests.userId),
             store
           );
-          //   console.log("Here");
+          if (seller?._id) {
+            await Notifications.create({
+              userId: mongoose.Types.ObjectId(seller._id),
+              title: Constant.Notification.REQUEST_APPROVED.title,
+              message: Constant.Notification.REQUEST_APPROVED.message,
+            });
+          }
           if (seller?.fcmTokens) {
             await sendNotification(
               Constant.Notification.REQUEST_APPROVED.title,
@@ -71,7 +78,13 @@ class SellerRequestController {
             .message("Successfully Approved Request")
             .send();
         } else {
-          //   console.log("Here2");
+          if (seller?._id) {
+            await Notifications.create({
+              userId: mongoose.Types.ObjectId(seller._id),
+              title: Constant.Notification.REQUEST_APPROVED.title,
+              message: Constant.Notification.REQUEST_APPROVED.message,
+            });
+          }
           if (seller?.fcmTokens) {
             await sendNotification(
               Constant.Notification.REQUEST_REJECT.title,

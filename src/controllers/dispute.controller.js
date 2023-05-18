@@ -3,8 +3,6 @@ const ErrorMessage = require("../constants/ErrorMessage");
 const HttpError = require("../helpers/HttpError");
 const Response = require("../Response");
 const DisputeService = require("../services/dispute.service");
-const { sendNotification } = require("../setup/notification");
-// const UserService = require("../../../../vyaparik-user-service/src/services/user.service");
 
 class DisputeController {
   createDispute = async (req, res) => {
@@ -13,9 +11,9 @@ class DisputeController {
         */
 
     const data = {
-      userId: mongoose.Types.ObjectId(req.user.uid),
+      raisedBy: mongoose.Types.ObjectId(req.user.uid),
       cause: req.body.cause,
-      raisedBy: mongoose.Types.ObjectId(req.params.id),
+      userId: mongoose.Types.ObjectId(req.params.id),
     };
 
     try {
@@ -56,6 +54,7 @@ class DisputeController {
     if (req.user.type === "ADMIN") {
       const id = req.params.id || "";
       if (id) {
+        const result = await DisputeService.sendWarning(req.params.id);
         if (result) {
           Response(res)
             .status(200)
@@ -76,11 +75,9 @@ class DisputeController {
     if (req.user.type === "ADMIN") {
       const id = req.params.id || "";
       if (id) {
+        const result = await DisputeService.blockUser(req.params.id);
         if (result) {
-          Response(res)
-            .status(200)
-            .message("DUser blocked successfully")
-            .send();
+          Response(res).status(200).message("User blocked successfully").send();
         } else {
           Response(res).status(400).message("Some error occured").send();
         }

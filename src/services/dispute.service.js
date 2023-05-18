@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const Dispute = require("../models/dispute.model");
 const User = require("../models/user.model");
+const Notifications = require("../models/notifications.model");
 const { sendNotification } = require("../setup/notification");
 const Constant = require("../constants/Constant");
 
@@ -96,13 +97,16 @@ DisputeService.sendWarning = async (id) => {
       { isActive: false },
       { new: true }
     ).lean();
-    const user = await User.findById(dispute.userId).lean();
-    if (user.fcmTokens) {
-      await sendNotification(
-        Constant.Notification.DISPUTE_WARNING.title,
-        Constant.Notification.DISPUTE_WARNING.message,
-        user.fcmTokens
-      );
+    const user = await User.findById(dispute.raisedBy).lean();
+    if (user) {
+      if(user._id) 
+      if (user.fcmTokens) {
+        await sendNotification(
+          Constant.Notification.DISPUTE_WARNING.title,
+          Constant.Notification.DISPUTE_WARNING.message,
+          user.fcmTokens
+        );
+      }
     }
     return true;
   } catch (err) {
@@ -120,7 +124,7 @@ DisputeService.blockUser = async (id) => {
     const blockTime = new Date().getTime() + 24 * 7 * 60 * 60 * 1000;
     const user = await User.findOneAndUpdate(
       {
-        _id: mongoose.Types.ObjectId(dispute.userId),
+        _id: mongoose.Types.ObjectId(dispute.raisedBy),
       },
       { blockTime },
       { new: true }

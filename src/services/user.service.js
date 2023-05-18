@@ -21,6 +21,20 @@ UserService.blockUnblockById = async (id, isBlocked) => {
   }
 };
 
+UserService.updateBlockedTime = async (id) => {
+  try {
+    return await User.findOneAndUpdate(
+      {
+        _id: mongoose.Types.ObjectId(id),
+      },
+      { blockedTime: new Date().getTime() + 7 * 24 * 60 * 60 * 1000 },
+      { new: true }
+    ).lean();
+  } catch (err) {
+    return null;
+  }
+};
+
 UserService.findById = async (
   id,
   allowedFields = [],

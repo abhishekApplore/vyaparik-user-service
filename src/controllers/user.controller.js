@@ -13,7 +13,7 @@ const { ProductClient } = require("../grpc/clients");
 const ProductGRPC_ClientService = require("../grpc/clientServices/product-client-service");
 const sellerRequestService = require("../services/userRequest.service");
 const { sendNotification } = require("../setup/notification");
-const e = require("express");
+const Notifications = require("../models/notifications.model");
 
 const getUser = async (req, res) => {
   /*
@@ -451,6 +451,13 @@ const becomeSupplier = async (req, res) => {
 
     if (req.user) {
       const user = await UserService.findById(req.user.uid);
+      if (user?._id) {
+        await Notifications.create({
+          userId: mongoose.Types.ObjectId(user._id),
+          title: Constant.Notification.BECOME_A_SELLER.title,
+          message: Constant.Notification.BECOME_A_SELLER.message,
+        });
+      }
       await sendNotification(
         Constant.Notification.BECOME_A_SELLER.title,
         Constant.Notification.BECOME_A_SELLER.message,
