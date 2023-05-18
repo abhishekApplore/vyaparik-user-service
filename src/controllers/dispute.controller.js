@@ -35,13 +35,6 @@ class DisputeController {
       pageNumber,
       pageSize,
     });
-
-    // await sendNotification(
-    //   "Warning",
-    //   "Your account has been blocked",
-    //   token.token
-    // );
-
     if (!disputes) Response(res).status(204).message("No Dispute Found").send();
 
     Response(res)

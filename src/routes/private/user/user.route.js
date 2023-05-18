@@ -24,6 +24,7 @@ const {
   getAnotherSellerProfileWithFollowers,
   getAllUsers,
   blockUnblockUser,
+  getNotifications,
 } = require("../../../controllers/user.controller");
 const { AsyncHandler } = require("../../../helpers/utils.helper");
 const AuthMiddleware = require("../../../middlewares/auth.middleware");
@@ -32,6 +33,7 @@ const userRoute = require("express").Router();
 
 userRoute.use(AsyncHandler(AuthMiddleware));
 userRoute.get("/admin", AsyncHandler(getAllUsers));
+userRoute.get("/notifications", AsyncHandler(getNotifications));
 userRoute.get("/", AsyncHandler(getUser));
 userRoute.get("/followersList", AsyncHandler(followerList));
 userRoute.get("/followingList", AsyncHandler(followingList));

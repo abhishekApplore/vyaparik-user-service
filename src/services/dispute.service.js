@@ -4,6 +4,7 @@ const User = require("../models/user.model");
 const Notifications = require("../models/notifications.model");
 const { sendNotification } = require("../setup/notification");
 const Constant = require("../constants/Constant");
+const Notifications = require("../models/notifications.model");
 
 const DisputeService = {};
 
@@ -99,7 +100,13 @@ DisputeService.sendWarning = async (id) => {
     ).lean();
     const user = await User.findById(dispute.raisedBy).lean();
     if (user) {
-      if(user._id) 
+      if (user?._id) {
+        await Notifications.create({
+          userId: mongoose.Types.ObjectId(user._id),
+          title: Constant.Notification.DISPUTE_WARNING.title,
+          message: Constant.Notification.DISPUTE_WARNING.message,
+        });
+      }
       if (user.fcmTokens) {
         await sendNotification(
           Constant.Notification.DISPUTE_WARNING.title,
@@ -129,6 +136,13 @@ DisputeService.blockUser = async (id) => {
       { blockTime },
       { new: true }
     ).lean();
+    if (user?._id) {
+      await Notifications.create({
+        userId: mongoose.Types.ObjectId(user._id),
+        title: Constant.Notification.DISPUTE_BLOCK.title,
+        message: Constant.Notification.DISPUTE_BLOCK.message,
+      });
+    }
     if (user.fcmTokens) {
       await sendNotification(
         Constant.Notification.DISPUTE_BLOCK.title,

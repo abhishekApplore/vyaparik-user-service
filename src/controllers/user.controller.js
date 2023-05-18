@@ -15,6 +15,23 @@ const sellerRequestService = require("../services/userRequest.service");
 const { sendNotification } = require("../setup/notification");
 const Notifications = require("../models/notifications.model");
 
+const getNotifications = async (req, res) => {
+  try {
+    const userId = mongoose.Types.ObjectId(req?.user?.uid);
+    const notifications = await Notifications.find(
+      { userId },
+      { _id: 1, title: 1, message: 1 }
+    ).lean();
+    Response(res)
+      .status(200)
+      .message("Notifications fetched successfully")
+      .body(notifications)
+      .send();
+  } catch (error) {
+    Response(res).status(400).message("Some error occured").send();
+  }
+};
+
 const getUser = async (req, res) => {
   /*
   Work : Get user Profile
@@ -564,4 +581,5 @@ module.exports = {
   topSeller,
   getAnotherSellerProfileWithFollowers,
   blockUnblockUser,
+  getNotifications,
 };
