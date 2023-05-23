@@ -457,7 +457,7 @@ const sendOTP = async (req, res) => {
     user = await UserService.findByEmail(email);
     // for email
   }
-  if (user.isBlocked) {
+  if (user?.isBlocked) {
     return Response(res)
       .status(401)
       .message(ErrorMessage.USER_BLOCKED)
