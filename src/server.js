@@ -1,6 +1,11 @@
 const { GRPCServer } = require("./grpc/grpcServer");
 const logger = require("./helpers/logger");
-const userModel = require("./models/user.model");
+const storeModel = require("./models/store.model");
+
+const razorpay = require("razorpay");
+const axios = require("axios");
+const { default: mongoose } = require("mongoose");
+
 try {
   const { PORT, NODE_ENV, PROJECT_NAME, ORIGIN } = require("./config/");
   const express = require("express");
@@ -86,6 +91,90 @@ try {
 
   app.listen(PORT, async () => {
     logger.info("Server is Listening at PORT " + PORT + ", Version: 1.0");
+
+    // const razorpayInstance = new razorpay({
+    //   key_id: "rzp_test_Ec7n7SnaoOsjka",
+    //   key_secret: "SrxGAis5TlaMumON9lOaghy2",
+    // });
+
+    // try {
+    //   const contact = await axios({
+    //     url:
+    //       "https://rzp_test_Ec7n7SnaoOsjka:SrxGAis5TlaMumON9lOaghy2@api.razorpay.com/v1/fund_accounts/fa_LsQfzSWn1oQagd",
+    //     method: "GET",
+    //     data: {
+    //       fund_account_id: "fa_LsQfzSWn1oQagd",
+    //       account_number: "765432123456789",
+    //       amount: 1,
+    //       currency: "INR",
+    //       mode: "IMPS",
+    //       purpose: "refund",
+    //       queue_if_low_balance: true,
+    //     },
+    //   });
+
+    //   console.log(contact);
+    // } catch (eror) {
+    //   console.log(eror.response);
+    // }
+
+    // const stores = await storeModel.aggregate([
+    //   {
+    //     $lookup: {
+    //       from: "bankacconts",
+    //       localField: "bankAccount",
+    //       foreignField: "_id",
+    //       as: "bankAccount",
+    //     },
+    //   },
+    //   {
+    //     $project: {
+    //       _id: 1,
+    //       name: 1,
+    //       mobile: 1,
+    //       bankAccount: { $first: "$bankAccount" },
+    //     },
+    //   },
+    // ]);
+    // try {
+    //   for await (let store of stores) {
+    //     const contact = await axios({
+    //       url:
+    //         "https://rzp_test_Ec7n7SnaoOsjka:SrxGAis5TlaMumON9lOaghy2@api.razorpay.com/v1/contacts",
+    //       method: "POST",
+    //       data: {
+    //         name: store.name.toLowerCase(),
+    //         contact: store.mobile,
+    //       },
+    //     });
+    //     const fund = await axios({
+    //       url:
+    //         "https://rzp_test_Ec7n7SnaoOsjka:SrxGAis5TlaMumON9lOaghy2@api.razorpay.com/v1/fund_accounts",
+    //       method: "POST",
+    //       data: {
+    //         contact_id: contact.data.id,
+    //         account_type: "bank_account",
+    //         bank_account: {
+    //           name: store.bankAccount.accountHolderName,
+    //           ifsc: "HDFC0000053",
+    //           account_number: "765432123456789",
+    //         },
+    //       },
+    //     });
+    //     await storeModel.findOneAndUpdate(
+    //       {
+    //         _id: mongoose.Types.ObjectId(store._id),
+    //       },
+    //       {
+    //         razorpayContactId: contact?.data?.id,
+    //         razorpayFundAccountId: fund.data.id,
+    //       }
+    //     );
+    //   }
+    //   console.log("DOne");
+    // } catch (err) {
+    //   console.log(err.response);
+    // }
   });
 
   function onServerStart() {

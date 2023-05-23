@@ -54,6 +54,14 @@ const Schema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    razorpayContactId: {
+      type: String,
+      default: "",
+    },
+    razorpayFundAccountId: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,
