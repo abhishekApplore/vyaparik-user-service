@@ -293,7 +293,7 @@ UserService.getSellerById = async (id) => {
                 type: 1,
                 gst: 1,
                 bankAccount: { $first: "$bankAccount" },
-                address: { $first: "$bankAccount" },
+                address: { $first: "$address" },
               },
             },
           ],
