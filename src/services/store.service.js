@@ -4,7 +4,6 @@ const Store = require("../models/store.model");
 const StoreService = {};
 
 StoreService.create = (data = {}) => {
-  console.log("StoreService");
   return Store.create(data);
 };
 
