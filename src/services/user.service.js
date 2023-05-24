@@ -236,7 +236,7 @@ UserService.getSellerById = async (id) => {
       {
         $match: {
           type: "SELLER",
-          _id: mongoose.Types.ObjectId(),
+          _id: mongoose.Types.ObjectId(id),
         },
       },
       {
