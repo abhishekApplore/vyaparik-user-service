@@ -230,13 +230,13 @@ UserService.create = async (data = {}) => {
   return User.create(data);
 };
 
-UserService.getSellerById = async () => {
+UserService.getSellerById = async (id) => {
   try {
     return User.aggregate([
       {
         $match: {
           type: "SELLER",
-          _id: mongoose.Types.ObjectId("646c9ea065148fa4c489c4af"),
+          _id: mongoose.Types.ObjectId(),
         },
       },
       {
