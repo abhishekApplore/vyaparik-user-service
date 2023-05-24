@@ -230,6 +230,47 @@ UserService.create = async (data = {}) => {
   return User.create(data);
 };
 
+UserService.getSellerById = async () => {
+  try {
+    return User.aggregate([
+      {
+        $match: {
+          type: "SELLER",
+          _id: mongoose.Types.ObjectId("646c9ea065148fa4c489c4af"),
+        },
+      },
+      {
+        $lookup: {
+          from: "stores",
+          localField: "storeId",
+          foreignField: "_id",
+          as: "store",
+          pipeline: [
+            {
+              $lookup: {
+                from: "bankacconts",
+                localField: "bankAccount",
+                foreignField: "_id",
+                as: "bankAccount",
+              },
+            },
+            {
+              $lookup: {
+                from: "addresses",
+                localField: "address",
+                foreignField: "_id",
+                as: "address",
+              },
+            },
+          ],
+        },
+      },
+    ]);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // public methods that filters public data for client access. Synced with app models.
 
 UserService.public.user = [

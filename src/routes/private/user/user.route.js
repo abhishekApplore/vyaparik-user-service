@@ -25,6 +25,7 @@ const {
   getAllUsers,
   blockUnblockUser,
   getNotifications,
+  getSellerById,
 } = require("../../../controllers/user.controller");
 const { AsyncHandler } = require("../../../helpers/utils.helper");
 const AuthMiddleware = require("../../../middlewares/auth.middleware");
@@ -45,15 +46,13 @@ userRoute.put("/", AsyncHandler(updateProfile));
 userRoute.post("/addAddress", AsyncHandler(addAddress));
 userRoute.get("/address", AsyncHandler(getAllAddressOfMyself));
 userRoute.get("/:id", AsyncHandler(getProfile));
-userRoute.get(
-  "/seller/me",
-  AsyncHandler(AuthMiddleware),
-  AsyncHandler(getOwnSellerProfileWithFollowers)
-);
+userRoute.get("/seller/me", AsyncHandler(getOwnSellerProfileWithFollowers));
 userRoute.get(
   "/seller/:id",
   AsyncHandler(getAnotherSellerProfileWithFollowers)
 );
+
+userRoute.get("/admin/seller/:id", AsyncHandler(getSellerById));
 userRoute.put("/seller/update/me", AsyncHandler(updateOwnSellerProfile));
 userRoute.get("/getAddress/:id", AsyncHandler(getAddress));
 userRoute.put("/updateAddress/:id", AsyncHandler(updateAddress));

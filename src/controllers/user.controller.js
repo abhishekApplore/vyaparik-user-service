@@ -131,6 +131,19 @@ const getOwnSellerProfileWithFollowers = async (req, res) => {
   }
 };
 
+const getSellerById = async (req, res) => {
+  try {
+    const id = req?.params?.id;
+    const seller = await UserService.getSellerById(id);
+    return Response(res)
+      .status(200)
+      .body(seller[0] || null)
+      .send();
+  } catch (error) {
+    throw new HttpError(ex.status, ex.message);
+  }
+};
+
 const getAnotherSellerProfileWithFollowers = async (req, res) => {
   /*
   Work : Get user Profile for another user
@@ -580,4 +593,5 @@ module.exports = {
   getAnotherSellerProfileWithFollowers,
   blockUnblockUser,
   getNotifications,
+  getSellerById,
 };
