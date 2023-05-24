@@ -235,15 +235,15 @@ UserService.getSellerById = async (id) => {
     return User.aggregate([
       {
         $match: {
-          type: "SELLER",
+          type: "BUYER",
           _id: mongoose.Types.ObjectId(id),
         },
       },
       {
         $lookup: {
           from: "stores",
-          localField: "storeId",
-          foreignField: "_id",
+          localField: "_id",
+          foreignField: "user",
           as: "store",
           pipeline: [
             {
