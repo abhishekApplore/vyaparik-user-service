@@ -252,6 +252,17 @@ UserService.getSellerById = async (id) => {
                 localField: "bankAccount",
                 foreignField: "_id",
                 as: "bankAccount",
+                pipeline: [
+                  {
+                    $project: {
+                      _id: 0,
+                      accountHolderName: 1,
+                      accountNumber: 1,
+                      ifsc: 1,
+                      bankName: 1,
+                    },
+                  },
+                ],
               },
             },
             {
@@ -260,9 +271,41 @@ UserService.getSellerById = async (id) => {
                 localField: "address",
                 foreignField: "_id",
                 as: "address",
+                pipeline: [
+                  {
+                    $project: {
+                      _id: 0,
+                      mobile: 1,
+                      pincode: 1,
+                      locality: 1,
+                      state: 1,
+                      city: 1,
+                      address: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                name: 1,
+                type: 1,
+                gst: 1,
+                bankAccount: { $first: "$bankAccount" },
+                address: { $first: "$bankAccount" },
               },
             },
           ],
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          fullname: 1,
+          store: {
+            $first: "$store",
+          },
         },
       },
     ]);
