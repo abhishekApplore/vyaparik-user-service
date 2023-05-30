@@ -14,11 +14,17 @@ StoreService.exists = (id) => {
 StoreService.findById = (id) => {
   return Store.findById(id);
 };
-StoreService.topSellers = (uid) => {
+StoreService.topSellers = (uid, search) => {
   return Store.aggregate([
     {
       $match: {
         _id: { $ne: uid ? mongoose.Types.ObjectId(uid) : null },
+        ...(search && {
+          name: {
+            $regex: search,
+            $options: "i",
+          },
+        }),
       },
     },
     {
@@ -35,11 +41,6 @@ StoreService.topSellers = (uid) => {
         localField: "_id",
         foreignField: "followingId",
         as: "followers",
-      },
-    },
-    {
-      $addFields: {
-        rating: 0,
       },
     },
   ]);
@@ -134,8 +135,30 @@ StoreService.findExtraDetailsById = (uid, userId) => {
       },
     },
     {
+      $lookup: {
+        from: "reviews",
+        localField: "_id",
+        foreignField: "storeId",
+        as: "rating",
+        pipeline: [
+          {
+            $group: {
+              _id: "$storeId",
+              rating: { $avg: "$rating" },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              rating: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
       $addFields: {
-        rating: 0,
+        rating: { $first: "$rating.rating" },
       },
     },
   ]);

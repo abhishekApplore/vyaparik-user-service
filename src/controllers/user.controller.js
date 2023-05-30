@@ -551,9 +551,12 @@ const topSeller = async (req, res) => {
   try {
     let users;
     if (req.user) {
-      users = await StoreService.topSellers(req.user.uid);
+      users = await StoreService.topSellers(
+        req.user.uid,
+        req.query?.search || ""
+      );
     } else {
-      users = await StoreService.topSellers();
+      users = await StoreService.topSellers(null, req.query?.search || "");
     }
     for (let i = 0; i < users.length; i++) {
       const userSold = await ProductGRPC_ClientService.getNumberOfSoldProductsByUser(
