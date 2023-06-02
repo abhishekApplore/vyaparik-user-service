@@ -61,6 +61,24 @@ StoreService.findExtraDetailsById = (uid, userId) => {
     },
     {
       $lookup: {
+        from: "products",
+        localField: "_id",
+        foreignField: "storeId",
+        as: "products",
+        pipeline: [
+          {
+            $count: "totalProducts",
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        products: { $first: "$products.totalProducts" },
+      },
+    },
+    {
+      $lookup: {
         from: "orders",
         localField: "user",
         foreignField: "sellerId",

@@ -114,14 +114,12 @@ const getOwnSellerProfileWithFollowers = async (req, res) => {
   try {
     const { uid } = req.user;
     const user = await StoreService.findExtraDetailsById(uid);
-    const products = await ProductGRPC_ClientService.getAllProductsOfParticularUser(
-      uid
-    );
-
-    console.log(user);
+    // const products = await ProductGRPC_ClientService.getAllProductsOfParticularUser(
+    //   uid
+    // );
 
     if (user && user.length > 0) {
-      user[0].products = products?.product?.length;
+      // user[0].products = products?.product?.length;
       return Response(res).status(200).body(user).send();
     } else {
       return Response(res).status(404).message("User not found").send();
@@ -157,9 +155,9 @@ const getAnotherSellerProfileWithFollowers = async (req, res) => {
       user[0].canReview = false;
     }
     delete user[0].orders;
-    const products = await ProductGRPC_ClientService.getAllProductsOfParticularUser(
-      uid
-    );
+    // const products = await ProductGRPC_ClientService.getAllProductsOfParticularUser(
+    //   uid
+    // );
 
     if (user) {
       user[0].products = products.product.length;
