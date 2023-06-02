@@ -160,7 +160,7 @@ const getAnotherSellerProfileWithFollowers = async (req, res) => {
     // );
 
     if (user) {
-      user[0].products = products.product.length;
+      // user[0].products = products.product.length;
       return Response(res).status(200).body(user).send();
     } else {
       throw new HttpError(404, "User Not Found");
