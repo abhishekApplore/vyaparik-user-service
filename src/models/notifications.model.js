@@ -19,7 +19,7 @@ const Schema = mongoose.Schema(
   },
   {
     timestamps: true,
-    collection: "auth-otps",
+    collection: "notifications",
   }
 );
 
