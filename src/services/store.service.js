@@ -56,7 +56,7 @@ StoreService.findExtraDetailsById = (uid, userId) => {
   return Store.aggregate([
     {
       $match: {
-        user: mongoose.Types.ObjectId(uid),
+        // user: mongoose.Types.ObjectId(uid),
       },
     },
     {
@@ -115,7 +115,7 @@ StoreService.findExtraDetailsById = (uid, userId) => {
           {
             $lookup: {
               from: "users",
-              localField: "followingId",
+              localField: "userId",
               foreignField: "_id",
               as: "userInfo",
               pipeline: [
