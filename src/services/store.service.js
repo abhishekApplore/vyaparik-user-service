@@ -56,7 +56,7 @@ StoreService.findExtraDetailsById = (uid, userId) => {
   return Store.aggregate([
     {
       $match: {
-        // user: mongoose.Types.ObjectId(uid),
+        user: mongoose.Types.ObjectId(uid),
       },
     },
     {
